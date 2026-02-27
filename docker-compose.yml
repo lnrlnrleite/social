@@ -43,6 +43,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=https://social.datapowerlabs.com.br/api
     container_name: saas_web_react
     restart: always
     ports:
