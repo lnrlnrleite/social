@@ -14,7 +14,8 @@ const SettingsForm = ({ tenantId, setTenantId }) => {
     useEffect(() => {
         if (tenantId) {
             setFetching(true);
-            fetch(`http://localhost:3001/api/tenants/${tenantId}`)
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+            fetch(`${apiUrl}/tenants/${tenantId}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data && !data.error) {
@@ -45,7 +46,8 @@ const SettingsForm = ({ tenantId, setTenantId }) => {
                 throw new Error('Tenant ID não disponível. Não é possível salvar integrações.');
             }
 
-            const url = `http://localhost:3001/api/tenants/${tenantId}`;
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+            const url = `${apiUrl}/tenants/${tenantId}`;
             const method = 'PUT';
 
             const payload = {

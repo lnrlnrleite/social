@@ -27,7 +27,8 @@ const Dashboard = ({ tenantId, setTenantId }) => {
     useEffect(() => {
         if (tenantId) {
             setFetching(true);
-            fetch(`http://localhost:3001/api/tenants/${tenantId}`)
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+            fetch(`${apiUrl}/tenants/${tenantId}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data && !data.error) {
@@ -61,11 +62,12 @@ const Dashboard = ({ tenantId, setTenantId }) => {
         setStatus({ type: '', message: '' });
 
         try {
-            let url = 'http://localhost:3001/api/tenants';
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+            let url = `${apiUrl}/tenants`;
             let method = 'POST';
 
             if (tenantId) {
-                url = `http://localhost:3001/api/tenants/${tenantId}`;
+                url = `${apiUrl}/tenants/${tenantId}`;
                 method = 'PUT';
             }
 
