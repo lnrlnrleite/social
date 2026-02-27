@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # ======== BANCO DE DADOS ========
+  database:
+    image: postgres:15-alpine
+    container_name: saas_pg_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-multitenant_saas}
+    ports:
+      - "5432:5432"
+    volumes:
+      # Volume persistente para os dados do PostgreSQL
+      - pgdata:/var/lib/postgresql/data
+      # Volume para o script de inicialização do schema (roda apenas na 1ª criação de um container limpo)
+      - ./backend/src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  # ======== BACKEND (API Node.js) ========
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: saas_api_node
+    restart: always
+    environment:
+      - PORT=3001
+      - DB_USER=${DB_USER:-postgres}
+      - DB_HOST=database # Nome do service do BD acima
+      - DB_NAME=${DB_NAME:-multitenant_saas}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_PORT=5432
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
+
+  # ======== FRONTEND (React SPA + Nginx) ========
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: saas_web_react
+    restart: always
+    ports:
+      - "80:80" # Mapeia a porta 80 da VPS para a porta 80 do Nginx
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
