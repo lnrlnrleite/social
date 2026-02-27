@@ -32,7 +32,7 @@ Este projeto é uma plataforma SaaS (Software as a Service) desenvolvida para au
 
 1.  **Clone o repositório**:
     ```bash
-    git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
+    git clone [https://github.com/lnrlnrleite/social](https://github.com/lnrlnrleite/social)
     ```
 
 2.  **Instale as dependências**:
